@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel cancel predictor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js" integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+
+<div class="ui segment">
+    <div class="ui container">
+
+        <h1 class="ui header">Hotel cancellation predictor</h1>
+        <div class="ui form">
+          <div class="grouped fields">
+            <label>What is your hotel type?</label>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" name="hotel_type" value="city" checked="checked">
+                <label>City Hotel</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio"  name="hotel_type" value="resort">
+                <label>Resort Hotel</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="grouped fields">
+              <label>When will they arrive?</label><br>
+
+              <div class="ui selection dropdown">
+                  <input type="hidden" name="month">
+                  <i class="dropdown icon"></i>
+                  <div class="default text">Month</div>
+                  <div class="menu">
+                    <div class="item" data-value="1">Jan</div>
+                    <div class="item" data-value="2">Feb</div>
+                    <div class="item" data-value="3">Mar</div>
+                    <div class="item" data-value="4">Apr</div>
+                    <div class="item" data-value="5">May</div>
+                    <div class="item" data-value="6">Jun</div>
+                    <div class="item" data-value="7">Jul</div>
+                    <div class="item" data-value="8">Aug</div>
+                    <div class="item" data-value="9">Sep</div>
+                    <div class="item" data-value="10">Oct</div>
+                    <div class="item" data-value="11">Nov</div>
+                    <div class="item" data-value="12">Dec</div>
+                  </div>
+              </div>
+          </div>
+
+            <div class="grouped fields">
+                <label>How many people?</label><br>
+                <div class="ui input">
+                  <input type="text" name="number_of_people" placeholder="Number of people...">
+                </div>
+            </div>
+
+            <button class="ui button" type="submit">Submit</button>
+        </div>
+    </div>
+</div>
+    <div class="ui segment">
+    <div class="ui container">
+        <h2>Here's the result:</h2>
+        <div id="result_box">Click submit to see result.</div>
+    </div>
+        </div>
+
+<script>
+    $('.ui.dropdown')
+      .dropdown()
+    ;
+
+    $('button').click(function(){
+        $('#result_box').html("loading...");
+
+        var data = {
+            hotel_type: $( "input[name='hotel_type']" ).val(),
+            number_of_people: $( "input[name='number_of_people']" ).val(),
+            arrival_month: $( "input[name='month']" ).val(),
+        };
+
+        console.log(data);
+
+        $.post( "/api/get_prediction_result", data).done(function(response_data) {
+            $('#result_box').html(response_data);
+        }).fail(function() {
+            $('#result_box').html("Failed... check console to debug.");
+        });
+    });
+
+</script>
+
+</body>
+</html>
